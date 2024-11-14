@@ -3,14 +3,17 @@
 </header>
 
 <div class="main">
-  <h2>Estaciones Meteorológicas</h2>
+  <h2>Weather Stations</h2>
   <select (change)="onSelectStation($event.target.value)">
-    <option *ngFor="let station of stations" [value]="station">{{ station }}</option>
+    <option *ngFor="let station of stations" [value]="station.stationIdentifier">
+      {{ station.name }}
+    </option>
   </select>
 
   <div *ngIf="currentWeather">
-    <h3>Clima Actual</h3>
-    <p>Temperatura: {{ currentWeather.temperature }}°C</p>
+    <h3>Current Weather</h3>
+    <p *ngIf="currentWeather.temperature !== null">Temperature: {{ currentWeather.temperature }}°C</p>
+    <p *ngIf="currentWeather.temperature === null">Temperature not available</p>
   </div>
 </div>
 

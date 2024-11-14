@@ -13,14 +13,24 @@ export class WeatherService {
 
   getStations(): Observable<any[]> {
     return this.http.get<any>(this.stationsUrl).pipe(
-      map(response => response.features.map(feature => feature.properties.name))
+      map(response => response.features.map(feature => ({
+        name: feature.properties.name,
+        stationIdentifier: feature.properties.stationIdentifier
+      })))
     );
   }
 
   getCurrentWeather(stationId: string): Observable<any> {
     const url = `https://api.weather.gov/stations/${stationId}/observations?limit=1`;
+    console.log(url);
+    
     return this.http.get<any>(url).pipe(
-      map(response => response.features[0].properties)
+      map(response => {
+        const properties = response.features[0].properties;
+        return {
+          temperature: properties.temperature.value,
+        };
+      })
     );
   }
 } 
