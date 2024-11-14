@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import { WeatherService } from './weather.service';
 
 @Component({
   selector: 'app-root',
@@ -7,12 +7,22 @@ import { Observable } from 'rxjs';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-  constructor() {
+  stations: string[] = [];
+  currentWeather: any;
 
+  constructor(private weatherService: WeatherService) {}
+
+  ngOnInit() {
+
+    this.weatherService.getStations().subscribe(stations => {
+      this.stations = stations;
+    });
   }
 
-  ngOnInit(): void {
-    
-  }
+  onSelectStation(stationName: string) {
 
+    this.weatherService.getCurrentWeather(stationName).subscribe(weather => {
+      this.currentWeather = weather;
+    });
+  }
 }
