@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { WeatherService } from './weather.service';
+import { WeatherData } from './models/weather.model';
 
 @Component({
   selector: 'app-root',
@@ -7,22 +8,47 @@ import { WeatherService } from './weather.service';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-  stations: string[] = [];
-  currentWeather: any;
+  stations: Array<{ name: string; stationIdentifier: string }> = [];
+  currentWeather?: WeatherData;
 
   constructor(private weatherService: WeatherService) {}
 
   ngOnInit() {
+    this.loadStations();
+  }
 
-    this.weatherService.getStations().subscribe(stations => {
-      this.stations = stations;
+  loadStations() {
+    this.weatherService.getStations().subscribe({
+      next: (stations) => {
+        this.stations = stations;
+      },
+      error: (error) => {
+        console.error('Error loading stations:', error);
+      }
     });
   }
 
-  onSelectStation(stationName: string) {
+  onSelectStation(stationId: string) {
+    if (stationId) {
+      this.getWeatherForStation(stationId);
+    }
+  }
 
-    this.weatherService.getCurrentWeather(stationName).subscribe(weather => {
-      this.currentWeather = weather;
+  getWeatherForStation(stationId: string) {
+    this.weatherService.getCurrentWeather(stationId).subscribe({
+      next: (weather) => {
+        this.currentWeather = weather;
+      },
+      error: (error) => {
+        console.error('Error loading weather:', error);
+      }
     });
+  }
+
+  formatTemperature(temp: number | null | undefined): string {
+    if (temp === null || temp === undefined) {
+      return 'Temperature not available';
+    }
+    return `Temperature: ${temp.toFixed(1)}°C`;
   }
 }

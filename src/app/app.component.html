@@ -12,7 +12,7 @@
 
   <div *ngIf="currentWeather">
     <h3>Current Weather</h3>
-    <p *ngIf="currentWeather.temperature !== null">Temperature: {{ currentWeather.temperature }}°C</p>
+    <p *ngIf="currentWeather.temperature !== null">{{ currentWeather.temperature !== null ? 'Temperature: ' + currentWeather.temperature + '°C' : 'Temperature not available' }}</p>
     <p *ngIf="currentWeather.temperature === null">Temperature not available</p>
   </div>
 </div>
